@@ -24,8 +24,9 @@ class RankingUsers extends Command
 
         $palpites = Palpite::all();
         $datanow = Carbon::now()->format('Y-m-d');
-        $horanow = Carbon::now()->addHour(2)->format('h:m');
+        $horanow = Carbon::now()->addHour(2)->format('H:m');
 
+        echo $horanow;
 
 
 

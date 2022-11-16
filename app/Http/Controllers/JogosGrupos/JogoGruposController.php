@@ -30,6 +30,8 @@ class JogoGruposController extends Controller
         }
         $jogo->save();
 
+
+
         return 'sucesso';
     }
 }
