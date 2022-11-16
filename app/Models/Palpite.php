@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JogoGrupo extends Model
+class Palpite extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
-        'time1_id',
+        'user_id',
+        'jogo_id',
         'gols_time1',
-        'time2_id',
         'gols_time2',
-        'data',
-        'hora',
+        'fase',
     ];
 }

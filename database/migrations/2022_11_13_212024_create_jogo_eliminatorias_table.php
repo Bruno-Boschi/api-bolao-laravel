@@ -19,7 +19,7 @@ class CreateJogoEliminatoriasTable extends Migration
             $table->integer('gols_time1');
             $table->integer('time2_id');
             $table->integer('gols_time2');
-            $table->integer('fase');
+            $table->integer('fase'); // 1 oitavas , 2 quartas, 3 semis , 0 terceiro , 4 final
             $table->date('data');
             $table->time('hora');
             $table->timestamps();
