@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Pontos;
+namespace App\Http\Controllers\Ranking;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserPonto;
+use App\Models\Ranking;
 use Illuminate\Http\Request;
 
-class PontosController extends Controller
+class RankingController extends Controller
 {
 
     public function all()
     {
         //
 
-        $pontos = UserPonto::all();
+        $ranking = Ranking::all();
 
-        return $pontos;
+        return $ranking;
     }
 
 

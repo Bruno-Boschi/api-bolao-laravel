@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserPontosTable extends Migration
+class AlterTableUsersToken extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateUserPontosTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_pontos', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
-            $table->integer('pontos');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->string('token');
         });
     }
 
@@ -28,6 +26,9 @@ class CreateUserPontosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_pontos');
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->dropColumn('token');
+        });
     }
 }
