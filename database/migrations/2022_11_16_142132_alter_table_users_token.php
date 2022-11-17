@@ -16,6 +16,7 @@ class AlterTableUsersToken extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->string('token');
+            $table->integer('rank')->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ class AlterTableUsersToken extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->dropColumn('token');
+            $table->dropColumn('rank');
         });
     }
 }

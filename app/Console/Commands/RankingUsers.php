@@ -4,8 +4,11 @@ namespace App\Console\Commands;
 
 use App\Models\JogoGrupo;
 use App\Models\Palpite;
+use App\Models\Ranking;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class RankingUsers extends Command
 {
@@ -21,17 +24,16 @@ class RankingUsers extends Command
 
     public function handle()
     {
+        $rankings =  DB::select('select
+    rankings.*,
+DENSE_RANK() OVER (ORDER BY pontos DESC) rank
+FROM rankings');
 
-        $palpites = Palpite::all();
-        $datanow = Carbon::now()->format('Y-m-d');
-        $horanow = Carbon::now()->addHour(2)->format('H:m');
+        foreach ($rankings as $ranking) {
+            $user = User::where('users.id', $ranking->user_id)->first();
 
-        echo $horanow;
-
-
-
-        foreach ($palpites as $palpite) {
-            $jogo = JogoGrupo::where($palpite->jogo_id, '=', 'id')->get();
+            $user->rank = $ranking->rank;
+            $user->save();
         }
     }
 }

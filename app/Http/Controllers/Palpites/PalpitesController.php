@@ -4,23 +4,29 @@ namespace App\Http\Controllers\Palpites;
 
 use App\Http\Controllers\Controller;
 use App\Models\Palpite;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PalpitesController extends Controller
 {
 
-    public function allFaseGrupo()
+    public function allFaseGrupo(Request $request)
     {
-        $palpites = Palpite::where('palpites.user_id', '=', 2)
+        $token = $request->header('token');
+        $user = User::where('token', $token)->first();
+        $palpites = Palpite::where('palpites.user_id', '=', $user->id)
             ->where('palpites.fase', '=', 1)
             ->get();
 
         return $palpites;
     }
 
-    public function allEliminatorias()
+    public function allEliminatorias(Request $request)
     {
-        $palpites = Palpite::where('palpites.user_id', '=', 2)
+        $token = $request->header('token');
+        $user = User::where('token', $token)->first();
+        $palpites = Palpite::where('palpites.user_id', '=', $user->id)
             ->where('palpites.fase', '=', 2)
             ->get();
 
@@ -31,24 +37,29 @@ class PalpitesController extends Controller
     public function create(Request $request)
     {
 
-        $jogos = $request->all();
-        $usuario_id = Auth::user()->id;
+        $jogos = json_encode($request->all());
+        $token = $request->header('token');
+        $user = User::where('token', $token)->first();
+        $jogos_decoded = \json_decode($jogos);
+        foreach ($jogos_decoded as $jogo) {
 
-        foreach ($jogos as $jogo) {
-            $palpite = Palpite::where($jogo->id, '=', 'palpites.jogo_id')
-                ->where($usuario_id . '=', 'palpites.user_id')
-                ->get();
-            if (isset($palpite)) {
+            $palpite = Palpite::where('palpites.jogo_id', $jogo->jogo_id)
+                ->where('palpites.user_id', $user->id)
+                ->first();
+
+            if ($palpite) {
                 $palpite->gols_time1 = $jogo->gols_time1;
                 $palpite->gols_time2 = $jogo->gols_time2;
+                $palpite->fase = $jogo->fase;
                 $palpite->save();
             } else {
                 $palpite = new Palpite;
 
-                $palpite->user_id = $usuario_id;
+                $palpite->user_id = $user->id;
                 $palpite->jogo_id = $jogo->jogo_id;
                 $palpite->gols_time1 = $jogo->gols_time1;
                 $palpite->gols_time2 = $jogo->gols_time2;
+                $palpite->fase = $jogo->fase;
                 $palpite->save();
             }
         }

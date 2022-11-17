@@ -51,19 +51,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $email = $request->header('email');
-        $password = $request->header('password');
+        $email = $request->email;
+        $password = $request->password;
         $user = User::where('email', $email)->first();
+        $response = self::getToken($email, $password);
+        $token = $response->user->token;
 
         if (!$user) {
-            $response = self::getToken($email, $password);
-            $token = $response->user->token;
             if ($response->status == false) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Erro ao logar',
 
-                ]);
+                ], 401);
             }
 
 
@@ -102,21 +102,22 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Logado Com sucesso',
                 'token' => $token,
-            ]);
+            ], 401);
         }
 
         if ($user->email === $email && (Hash::check($password, $user->password))) {
-
+            $user->token = $token;
+            $user->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Logado com sucesso',
                 'token' => $user->token,
-            ]);
+            ], 200);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Verifique suas credencias'
-        ]);
+            'message' => 'Verifique suas credenciais'
+        ], 401);
     }
 }
