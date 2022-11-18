@@ -102,7 +102,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Logado Com sucesso',
                 'token' => $token,
-            ], 401);
+            ], 200);
         }
 
         if ($user->email === $email && (Hash::check($password, $user->password))) {
