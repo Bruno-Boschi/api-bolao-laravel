@@ -13,11 +13,11 @@ class UsersController extends Controller
     //
     public function one(Request $request)
     {
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('token', $token)
             ->leftJoin('rankings', 'rankings.user_id', '=', 'users.id')
             ->select('users.name', 'users.rank', 'rankings.pontos as pontos')
-            ->get();
+            ->first();
 
         return $user;
     }

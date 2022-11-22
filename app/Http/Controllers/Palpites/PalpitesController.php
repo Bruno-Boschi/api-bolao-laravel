@@ -13,7 +13,7 @@ class PalpitesController extends Controller
 
     public function allFaseGrupo(Request $request)
     {
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('token', $token)->first();
         $palpites = Palpite::where('palpites.user_id', '=', $user->id)
             ->where('palpites.fase', '=', 1)
@@ -24,7 +24,7 @@ class PalpitesController extends Controller
 
     public function allEliminatorias(Request $request)
     {
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('token', $token)->first();
         $palpites = Palpite::where('palpites.user_id', '=', $user->id)
             ->where('palpites.fase', '=', 2)
@@ -38,9 +38,10 @@ class PalpitesController extends Controller
     {
 
         $jogos = json_encode($request->all());
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
         $user = User::where('token', $token)->first();
-        $jogos_decoded = \json_decode($jogos);
+        $jogos_decoded = json_decode($jogos);
+
         foreach ($jogos_decoded as $jogo) {
 
             $palpite = Palpite::where('palpites.jogo_id', $jogo->jogo_id)
@@ -50,16 +51,16 @@ class PalpitesController extends Controller
             if ($palpite) {
                 $palpite->gols_time1 = $jogo->gols_time1;
                 $palpite->gols_time2 = $jogo->gols_time2;
-                $palpite->fase = $jogo->fase;
+                $palpite->fase = ($jogo->fase ? $jogo->fase : 1);
                 $palpite->save();
             } else {
                 $palpite = new Palpite;
 
                 $palpite->user_id = $user->id;
-                $palpite->jogo_id = $jogo->jogo_id;
+                $palpite->jogo_id = $jogo->id;
                 $palpite->gols_time1 = $jogo->gols_time1;
                 $palpite->gols_time2 = $jogo->gols_time2;
-                $palpite->fase = $jogo->fase;
+                $palpite->fase = ($jogo->fase ? $jogo->fase : 1);
                 $palpite->save();
             }
         }

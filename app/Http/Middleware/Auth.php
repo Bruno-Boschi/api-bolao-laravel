@@ -15,7 +15,7 @@ class Auth
 
         // $email = $request->header('email');
         // $password = $request->header('password');
-        $token = $request->header('token');
+        $token = $request->header('Authorization');
 
         $url = 'https://office.joinads.me/run/api/users/data';
         $curl = curl_init();
